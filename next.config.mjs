@@ -1,7 +1,15 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
+
+  async rewrites() {
+    return [
+      {
+        source: "/:alias",
+        destination: "/horeca/:alias",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
