@@ -5,6 +5,8 @@ import { creaHorecaSettingsDefault } from "../../actions/creaHorecaSettingsDefau
 import { Spinner } from "@/components/ui/spinner";
 import UpdateSettingsHoreca from "../../components/updateSettingsHoreca";
 import { getHorecaThemeByID } from "@/lib/horeca/getHorecaThemeByID";
+import GoogleMaps from "@/components/maps/googleMaps";
+import { Separator } from "@/components/ui/separator";
 
 export default async function GestioneHorecaPAGE({ params }) {
 
@@ -12,8 +14,8 @@ export default async function GestioneHorecaPAGE({ params }) {
   const horeca = await getHorecaByID(idhoreca);
   const hs = horeca?.settings?.settings
   const theme = await getHorecaThemeByID(idhoreca)
-
-  console.log("THEME",hs)
+  const indirizzo = `${horeca.indirizzo}, ${horeca.civico} - ${horeca.cap} ${horeca.citta} ${horeca.provincia}`
+  console.log(hs)
 
   if (!idhoreca || !horeca) {
     return <div>Caricamento</div>;
@@ -51,13 +53,20 @@ export default async function GestioneHorecaPAGE({ params }) {
         <div className="flex flex-row lg:h-30 h-20 rounded-[4rem] p-3" style={theme.header} >
           <div className="aspect-square rounded-full" style={theme.logo} />
           <div className="flex flex-col flex-1 p-5 items-start justify-center ">
-            <h2 className="text-2xl font-bold text-neutral-900">{horeca.nome}</h2>
-            <h3 className="text-xs text-neutral-500 italic">@{horeca.alias}</h3>
-          </div>
-          <div className="flex flex-col p-5 items-start justify-center ">
-            social icon
+            <h2 className="text-2xl font-bold">{horeca.nome}</h2>
+            <h3 className="text-xs font-semibold italic">@{horeca.alias}</h3>
+            <Separator className={`my-1 border`}/>
+            <p className="text-xs">{indirizzo}</p>
+            <div className="flex flex-row items-start justify-center ">
+              social icon
+            </div>
           </div>
         </div>
+        {hs.maps &&
+        <div className="">
+          <GoogleMaps address={`${indirizzo}`}/>
+        </div>
+        }
       </div>
     </div>
   );

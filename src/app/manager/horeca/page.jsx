@@ -14,7 +14,7 @@ export default async function PageHORECA() {
       <ElencoHoreca horeca={horeca}/>
     </div> : 
     <div className="flex flex-1 flex-col items-center justify-center">
-      <FormHoreca/>
+      <FormHoreca padding={`p-8`} description={`Aggiungi la tua prima attività`}/>
     </div> }
   </div>
   );

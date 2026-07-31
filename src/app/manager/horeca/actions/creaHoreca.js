@@ -70,6 +70,67 @@ export async function creaHorecaAction(prevState, formData) {
     };
   }
 
+  const { data: abbonamento, error: abbonamentoError } = await supabase
+    .from("abbonamento")
+    .select(`
+      *,
+      piano:piano_abbonamento(*)
+    `)
+    .eq("utente", user.id)
+    .maybeSingle();
+
+  if (abbonamentoError) {
+    console.error(abbonamentoError);
+
+    return {
+      success: false,
+      message: "Errore durante il recupero dell'abbonamento.",
+      errors: {},
+      values,
+    };
+  }
+
+  if (!abbonamento?.piano) {
+    return {
+      success: false,
+      message: "Nessun piano di abbonamento attivo trovato.",
+      errors: {},
+      values,
+    };
+  }
+
+  const { count: numeroHoreca, error: horecaError } = await supabase
+    .from("horeca")
+    .select("id", { count: "exact", head: true })
+    .eq("id_utente", user.id);
+
+  if (horecaError) {
+    console.error(horecaError);
+
+    return {
+      success: false,
+      message: "Errore durante il conteggio delle attività.",
+      errors: {},
+      values,
+    };
+  }
+
+  const limiteHoreca = abbonamento.piano.limite_horeca;
+  const totaleAttuale = numeroHoreca ?? 0;
+
+  if (totaleAttuale + 1 > limiteHoreca) {
+    console.error(
+      `Raggiunto limite massimo horeca: ${totaleAttuale}/${limiteHoreca}`
+    );
+
+    return {
+      success: false,
+      message: `Hai raggiunto il limite massimo di ${limiteHoreca} attività previsto dal tuo piano.`,
+      errors: {},
+      values,
+    };
+  }
+
   const { error } = await supabase.from("horeca").insert({
     nome: validation.data.nome,
     alias: validation.data.alias,

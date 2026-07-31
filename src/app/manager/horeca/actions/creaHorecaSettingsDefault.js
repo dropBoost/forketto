@@ -18,6 +18,7 @@ export async function creaHorecaSettingsDefault(idHoreca) {
         email: null,
         whatsapp: null,
         maps: true,
+        googleMyBusiness: null,
         prenotazioni: false,
       },
     })

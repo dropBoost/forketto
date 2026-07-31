@@ -1,4 +1,5 @@
-import { LayoutDashboardIcon, Settings2Icon, CircleHelpIcon } from "lucide-react"
+import { Settings2Icon, CircleHelpIcon, Store, Soup, ChartSpline, Calculator, HandPlatter } from "lucide-react"
+import FormMenu from "@/app/manager/menu/components/FormMenu"
 
 export default function navData () {
 
@@ -8,19 +9,46 @@ export default function navData () {
       email: "m@example.com",
       // avatar: "/avatars/shadcn.jpg",
     },
+    quickMenu: [
+      {
+        title: "+ Aggiungi",
+        action: <FormMenu />
+      }
+    ],
     navMain: [
+      {
+        title: "Dashboard",
+        url: "/manager",
+        icon: (
+          <ChartSpline />
+        ),
+      },
       {
         title: "Horeca",
         url: "/manager/horeca",
         icon: (
-          <LayoutDashboardIcon />
+          <Store />
         ),
       },
       {
         title: "Menu",
         url: "/manager/menu",
         icon: (
-          <LayoutDashboardIcon />
+          <Soup />
+        ),
+      },
+      {
+        title: "Food Cost Calc",
+        url: "/manager/food-cost-calculator",
+        icon: (
+          <Calculator />
+        ),
+      },
+      {
+        title: "Servizio",
+        url: "/manager/sala",
+        icon: (
+          <HandPlatter />
         ),
       },
     ],

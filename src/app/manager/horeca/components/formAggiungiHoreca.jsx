@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { creaHorecaAction } from "../actions/creaHoreca";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,12 @@ function FieldError({ errors }) {
   );
 }
 
-export default function FormHoreca() {
+export default function FormHoreca({
+  titleButton = "Aggiungi",
+  description,
+  padding = "p-8",
+  iconSize = 16,
+  }) {
 
   const formRef = useRef(null);
   const [alias, setAlias] = useState("");
@@ -113,12 +118,12 @@ export default function FormHoreca() {
 
   return (
     <Dialog className={`max-h-screen`}>
-    <DialogTrigger className="flex flex-col gap-2 items-center justify-center bg-primary/20 p-8 rounded-2xl">
+    <DialogTrigger className={`flex flex-col gap-2 items-center justify-center bg-primary/20 rounded-2xl ${padding}`}>
       <div className="flex flex-row gap-1 bg-red-800 px-3 dark:hover:bg-muted transition-all py-1 rounded-sm text-neutral-50 items-center justify-center">
-      <Plus/>
-      <span className="text-sm">Aggiungi</span>
+      <Plus size={iconSize} strokeWidth={2}/>
+      <span className="text-xs">{titleButton}</span>
       </div>
-      <CardDescription>Aggiungi la tua prima attività</CardDescription>
+      {description && <CardDescription>{description}</CardDescription>}
     </DialogTrigger>
     <DialogContent showCloseButton={false}>
       <DialogHeader>
