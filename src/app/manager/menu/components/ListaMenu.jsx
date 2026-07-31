@@ -21,33 +21,6 @@ export default function ListaMenu({ categorie = [], horeca }) {
   const [errore, setErrore] = useState(null);
   const [update, setUpdate] = useState(0)
 
-  const gridsystem = [
-    {
-      nome: "1",
-      id: 1
-    },
-    {
-      nome: "2",
-      id: 2
-    },
-    {
-      nome: "3",
-      id: 3
-    },
-    {
-      nome: "4",
-      id: 4
-    },
-    {
-      nome: "5",
-      id: 5
-    },
-    {
-      nome: "6",
-      id: 6
-    },
-  ]
-
   useEffect(() => {
     if (horeca.length > 0 && !selectHoreca) {
       setSelectHoreca(horeca[0].id);
@@ -198,7 +171,7 @@ export default function ListaMenu({ categorie = [], horeca }) {
     return (
       <div className="flex flex-col gap-4">
         <div className="">
-          <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} padding={`p-4`} description={`Aggiungi elementi al tuo menu`}/>
+          <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} setUpdate={setUpdate} padding={`p-4`} description={`Aggiungi elementi al tuo menu`}/>
         </div>
         <div className="flex flex-row w-full justify-between">
           <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
