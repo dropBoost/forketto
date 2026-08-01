@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
-import { Loader2, Plus, Soup, ImagePlus, Trash2 } from "lucide-react";
-import { createMenuAction } from "../actions/createMenuActions";
+import { Loader2, Plus, Soup, ImagePlus, Trash2, Store } from "lucide-react";
+import { createMenuActionQuick } from "../actions/createMenuActionsQuick";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardDescription } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -79,17 +79,15 @@ const allergeniDisponibili = [
   },
 ];
 
-export default function FormMenu({ id_horeca, categorie = [], titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16, setUpdate }) {
+export default function FormMenuSelectHoreca({ categorie = [], horeca, titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16 }) {
 
   const formRef = useRef(null)
   const fileInputRef = useRef(null)
   const [previewImmagine, setPreviewImmagine] = useState(null)
   const [nomeImmagine, setNomeImmagine] = useState("")
+  const [selectHoreca, setSelectHoreca] = useState("")
 
-  const [state, formAction, pending] = useActionState(
-    createMenuAction,
-    initialState
-  );
+  const [state, formAction, pending] = useActionState( createMenuActionQuick, initialState );
 
   useEffect(() => {
     return () => {
@@ -109,7 +107,6 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
 
       setPreviewImmagine(null);
       setNomeImmagine("");
-      setUpdate(prev => prev+1)
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -178,7 +175,7 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
 
   return (
   <Dialog className={`max-h-screen`}>
-    <DialogTrigger className={`flex flex-col gap-2 items-center justify-center ${padding} dark:bg-primary/20 bg-secondary-foreground/5 rounded-2xl`}>
+    <DialogTrigger className={`flex flex-col w-full gap-2 items-center justify-center ${padding} dark:bg-primary/20 bg-secondary-foreground/5 rounded-2xl`}>
       <div className="flex flex-row gap-1 bg-red-800 px-3 dark:hover:bg-muted transition-all py-1 rounded-sm text-neutral-50 items-center justify-center">
         <Plus size={iconSize} strokeWidth={2}/>
         {titleButton !== "" ? <span className="text-xs">{titleButton}</span> : null}
@@ -204,7 +201,23 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
       <div className="-mx-4 no-scrollbar max-h-[60vh] overflow-y-auto px-4">
         <div className="border rounded-2xl p-4 w-full mb-1">
           <form ref={formRef} action={formAction} className="grid grid-cols-2 gap-6" id="form-menu-item">
-            <input type="hidden" name="id_horeca" value={id_horeca}/>
+            <input type="hidden" name="id_horeca" value={selectHoreca}/>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="id_horeca">Horeca</Label>
+
+              {horeca.length >= 0 ?
+              <div className="flex flex-1 flex-row gap-2 items-center">
+                <Store size={18} strokeWidth={2} className="text-red-700"/>
+                <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
+              </div> : null}
+
+              {state.errors?.nome && (
+                <p className="text-sm text-destructive">
+                  {state.errors.nome}
+                </p>
+              )}
+            </div>
 
             <div className="space-y-2 col-span-2">
               <Label htmlFor="nome">Nome</Label>
@@ -529,4 +542,25 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
     </DialogContent>
   </Dialog>
   );
+}
+
+
+function SelectCustom ({select, setSelect, item, placeholder = "scegli ...", label = "Elenco"}){
+  return (
+  <Select value={select} onValueChange={setSelect}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder={placeholder}/>
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>{label}</SelectLabel>
+        {item?.map((h) => (
+          <SelectItem key={h.id} value={h.id}>
+            {h.nome}
+          </SelectItem>
+        ))}
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+  )
 }

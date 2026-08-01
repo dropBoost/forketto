@@ -6,6 +6,9 @@ const nextConfig = {
     },
   },
   reactCompiler: true,
+  images: {
+    qualities: [100, 70, 75],
+  },
   async rewrites() {
     return [
       {

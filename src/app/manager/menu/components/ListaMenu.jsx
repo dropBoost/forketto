@@ -173,9 +173,11 @@ export default function ListaMenu({ categorie = [], horeca }) {
         <div className="">
           <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} setUpdate={setUpdate} padding={`p-4`} description={`Aggiungi elementi al tuo menu`}/>
         </div>
-        <div className="flex flex-row w-full justify-between">
+        {horeca.length <= 0 ?
+        <div className="flex flex-1 flex-row gap-2 items-center xl:justify-start justify-center w-full">
+          <Store size={18} strokeWidth={2} className="text-red-700"/>
           <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
-        </div>
+        </div> : null}
         <div className="rounded-lg border border-dashed p-10 text-center">
           <p className="font-medium">
             Nessun elemento presente nel menu
@@ -191,9 +193,9 @@ export default function ListaMenu({ categorie = [], horeca }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-row w-full max-w-full justify-between overflow-hidden">
-        {horeca.length > 0 ?
-        <div className="flex flex-row gap-2 items-center">
+      <div className="flex xl:flex-row flex-col w-full max-w-full xl:justify-end justify-center xl:items-center items-start gap-3 p-3 bg-muted/50 rounded-lg overflow-hidden">
+        {horeca.length <= 0 ?
+        <div className="flex flex-1 flex-row gap-2 items-center xl:justify-start justify-center w-full">
           <Store size={18} strokeWidth={2} className="text-red-700"/>
           <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
         </div> : null}
@@ -363,7 +365,7 @@ export default function ListaMenu({ categorie = [], horeca }) {
 
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-5 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-5 xl:grid-cols-5">
           {elementiFiltrati.map((elemento) => (
             <MenuCard
               key={elemento.id}
@@ -382,7 +384,7 @@ export default function ListaMenu({ categorie = [], horeca }) {
 function SelectCustom ({select, setSelect, item, placeholder = "scegli ...", label = "Elenco"}){
   return (
   <Select value={select} onValueChange={setSelect}>
-    <SelectTrigger className="w-full max-w-48">
+    <SelectTrigger className="w-full xl:max-w-48">
       <SelectValue placeholder={placeholder}/>
     </SelectTrigger>
     <SelectContent>

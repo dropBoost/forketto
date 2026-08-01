@@ -1,5 +1,7 @@
 export default function PAGEsitoHoreca () {
   return (
-    <>ELENCO DI TUTTI I LOCALI DI FORKETTO</>
+    <body className="min-h-full w-full flex flex-col items-center">
+      ciao
+    </body>
   )
 }

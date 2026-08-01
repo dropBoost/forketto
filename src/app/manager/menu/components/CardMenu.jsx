@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import {  ImageOff, Pencil, Eye, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import FormModificaMenu from "./FormMenuModifica";
 import { Button } from "@/components/ui/button";
 import ButtonSwitchBoolean from "@/components/button-switch-bool/ButtonSwitchBoolean";
@@ -35,10 +36,7 @@ export default function MenuCard({ elemento, categorie, onUpdated, setUpdate }) 
         {elemento.immagine ? (
           <img
             src={elemento.immagine}
-            alt={
-              elemento.nome ||
-              "Immagine piatto"
-            }
+            alt={elemento.nome || "Immagine piatto"}
             className="size-full object-cover"
           />
         ) : (
@@ -52,7 +50,7 @@ export default function MenuCard({ elemento, categorie, onUpdated, setUpdate }) 
         )}
       </div>
 
-      <CardHeader className="space-y-1">
+      <CardHeader className="">
         <div className="flex flex-col items-start justify-between gap-3">
           <div className="flex flex-wrap justify-end gap-1">
             <ButtonSwitchBoolean
@@ -76,15 +74,15 @@ export default function MenuCard({ elemento, categorie, onUpdated, setUpdate }) 
           </div>
 
           <div className="min-w-0 max-w-full">
-            <CardTitle className="truncate text-xs">
+            <CardTitle className="truncate text-sm">
               {elemento.nome ||
                 "Senza nome"}
             </CardTitle>
 
             {elemento.categoria?.alias && (
-              <p className="mt-1 text-xs uppercase italic text-muted-foreground">
+              <Badge className="mt-1 text-[0.6rem] uppercase border w-fit">
                 {elemento.categoria.alias}
-              </p>
+              </Badge>
             )}
           </div>
         </div>

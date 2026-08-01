@@ -1,28 +1,24 @@
-"use client"
-
 import * as React from "react"
-
 import { NavMain } from "@/components/nav-main"
 import { NavAction } from "./nav-action"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { CommandIcon } from "lucide-react"
-import { Separator } from "./ui/separator"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from "@/components/ui/sidebar"
 import navData from "./nav-data/nav-data"
 import Image from "next/image"
 import Link from "next/link"
 
-export function AppSidebar({ ...props }) {
+export async function AppSidebar({ ...props }) {
 
-  const nav = navData()
+  const nav = await navData()
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <Link href="/manager" className="flex hover:bg-muted bg-red-700 py-1 px-3 transition-all rounded-md items-center justify-center">
-            <Image src={`/assets/img/logo_forketto.png`} width={120} height={70} quality={100} alt="logo forketto menu"/>
+          <Link href="/manager" className="flex flex-col gap-1 hover:bg-muted py-2 px-3 transition-all rounded-md items-center justify-center">
+            <Image src={`/assets/img/logo_forketto.png`} width={800} height={400} quality={100} className="max-w-44 h-auto border border-primary px-4 py-1 rounded-lg" alt="logo forketto menu"/>
+            <span className="text-xs font-thin">the best menu ever</span>
           </Link>
         </SidebarMenu>
       </SidebarHeader>

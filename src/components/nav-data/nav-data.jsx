@@ -1,18 +1,34 @@
 import { Settings2Icon, CircleHelpIcon, Store, Soup, ChartSpline, Calculator, HandPlatter } from "lucide-react"
-import FormMenu from "@/app/manager/menu/components/FormMenu"
+import FormMenuSelectHoreca from "@/app/manager/menu/components/FormMenuSelectHoreca"
+import ElencoNotifiche from "../notifiche/elencoNotifiche";
+import { getUtente } from "@/lib/auth/getUtente"
+import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
 
-export default function navData () {
+export default async function navData () {
+
+  const utente = await getUtente();
+  const categorie = await getMenuCategorie();
+
+  const horeca = utente?.horeca
+  const avatar = `${utente?.nome?.slice(0,1)}${utente?.cognome?.slice(0,1)}`
 
   const navData = {
+
     user: {
-      name: "utente.email",
-      email: "m@example.com",
-      // avatar: "/avatars/shadcn.jpg",
+      name: `${utente.nome} ${utente.cognome}`,
+      email: `${utente.email}`,
+      monogram: `${avatar}`,
+      logo: `${utente?.img}`
     },
+
     quickMenu: [
       {
+        title: "",
+        action: <ElencoNotifiche />
+      },
+      {
         title: "+ Aggiungi",
-        action: <FormMenu />
+        action: <FormMenuSelectHoreca horeca={horeca} categorie={categorie}/>
       }
     ],
     navMain: [

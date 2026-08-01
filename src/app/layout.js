@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -14,11 +13,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased `} suppressHydrationWarning>
+    <html lang="it" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full w-full flex flex-col items-center">
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
+        {children}
       </body>
     </html>
   );
