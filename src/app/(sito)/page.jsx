@@ -1,6 +1,7 @@
 import BannerHomepage from "@/components/sito/theme/bannerHome";
 import CategorieHomepage from "@/components/sito/theme/categorieHome";
 import HeaderHome from "@/components/sito/theme/headerHome";
+import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
 
 export const metadata = {
   title: "Forketto",
@@ -25,7 +26,10 @@ export const metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+
+  const categorie = await getMenuCategorie()
+
   return (
     <section className="flex w-full flex-col items-center">
       <div className="w-full">
@@ -35,7 +39,7 @@ export default function Home() {
         <BannerHomepage/>
       </div>
       <div className="w-full">
-        <CategorieHomepage/>
+        <CategorieHomepage categorie={categorie}/>
       </div>
       <div className="w-full max-w-7xl border">
         OTHER

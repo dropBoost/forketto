@@ -8,15 +8,22 @@ const nextConfig = {
   reactCompiler: true,
   images: {
     qualities: [100, 70, 75],
-  },
-  async rewrites() {
-    return [
+    remotePatterns: [
       {
-        source: "/:alias",
-        destination: "/horeca/:alias",
+        protocol: "https",
+        hostname: "xvvyfmrtcbnlsnbzfmoq.supabase.co",
+        pathname: "/storage/v1/object/public/**",
       },
-    ];
+    ],
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/:alias",
+  //       destination: "/horeca/:alias",
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

@@ -3,7 +3,7 @@ import { getHorecaThemeByID } from "@/lib/horeca/getHorecaThemeByID";
 import { getMenuHorecaByID } from "@/lib/menu/getMenuItemsHorecaByID";
 import PageHorecaUI from "@/components/sito/theme/pageHoreca";
 
-export default async function HorecaSitoPAGE({ params }) {
+export default async function HorecaPAGE({ params }) {
 
   const { alias } = await params;
   const horeca = await getHorecaByAlias(alias);
