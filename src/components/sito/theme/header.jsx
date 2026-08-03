@@ -74,9 +74,12 @@ export default function Header() {
         <div className="flex h-full flex-1 items-center justify-center">
           <NavigationMenu>
             <NavigationMenuList>
-              <NavMenuItem label="Ristoranti" />
-
-              <NavigationMenuItem className="hidden md:flex">
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/horeca" target="_blank" className={`px-3 py-1 text-background hover:text-foreground`} >
+                  FOOD
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              {/* <NavigationMenuItem className="hidden md:flex">
                 <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
                   Components
                 </NavigationMenuTrigger>
@@ -94,9 +97,9 @@ export default function Header() {
                     ))}
                   </ul>
                 </NavigationMenuContent>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
 
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
                   With Icon
                 </NavigationMenuTrigger>
@@ -127,14 +130,15 @@ export default function Header() {
                     </li>
                   </ul>
                 </NavigationMenuContent>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
 
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <NavigationMenuLink
                   className={`${navigationMenuTriggerStyle()} bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100`}
                   render={<Link href="/docs">Docs</Link>}
                 />
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
+
             </NavigationMenuList>
           </NavigationMenu>
         </div>

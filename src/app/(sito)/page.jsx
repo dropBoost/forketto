@@ -1,3 +1,7 @@
+import BannerHomepage from "@/components/sito/theme/bannerHome";
+import CategorieHomepage from "@/components/sito/theme/categorieHome";
+import HeaderHome from "@/components/sito/theme/headerHome";
+
 export const metadata = {
   title: "Forketto",
   description: "Scopri Forketto e crea il sito digitale del tuo locale.",
@@ -23,8 +27,19 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <section className="flex w-full flex-col items-center max-w-7xl border">
-      <h1>HOme</h1>
+    <section className="flex w-full flex-col items-center">
+      <div className="w-full">
+        <HeaderHome/>
+      </div>
+      <div className="w-full">
+        <BannerHomepage/>
+      </div>
+      <div className="w-full">
+        <CategorieHomepage/>
+      </div>
+      <div className="w-full max-w-7xl border">
+        OTHER
+      </div>
     </section>
   );
 }

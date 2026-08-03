@@ -9,11 +9,9 @@ export const metadata = {
 export default function LayoutSito({ children }) {
   return (
     <div className="flex flex-col items-center min-h-screen w-full">
-      <Header />
-        <main className="flex flex-col flex-1 w-full items-center justify-start border">
+        <main className="flex flex-col flex-1 w-full items-center justify-start">
           {children}
         </main>
-      <Footer/>
     </div>
   );
 }
