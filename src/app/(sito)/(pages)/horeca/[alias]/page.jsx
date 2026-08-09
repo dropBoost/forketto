@@ -11,7 +11,7 @@ export default async function HorecaSitoPAGE({ params }) {
   const menu = await getMenuHorecaByID(horeca.id)
 
   return (
-    <div className="flex flex-col p-5 rounded-b-lg flex-1 gap-5 w-full">
+    <div className="flex flex-1 flex-col gap-5 w-full bg-primary">
       <PageHorecaUI horeca={horeca} theme={theme} menu={menu}/>
     </div>
   );
