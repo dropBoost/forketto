@@ -1,7 +1,8 @@
-import BannerHomepage from "@/components/sito/theme/bannerHome";
 import CategorieHomepage from "@/components/sito/theme/categorieHome";
+import Footer from "@/components/sito/theme/footer";
 import HeaderHome from "@/components/sito/theme/headerHome";
 import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
+import HeroBanner from "@/components/sito/theme/heroBanner";
 
 export const metadata = {
   title: "Forketto",
@@ -31,19 +32,17 @@ export default async function Home() {
   const categorie = await getMenuCategorie()
 
   return (
+    <>
+    <HeaderHome/>
     <section className="flex w-full flex-col items-center">
       <div className="w-full">
-        <HeaderHome/>
-      </div>
-      <div className="w-full">
-        <BannerHomepage/>
+        <HeroBanner bgImg="/assets/img/banner_forketto_home.png" bgColor="#ffcc05" titolo="Ciao" height={500}/>
       </div>
       <div className="w-full">
         <CategorieHomepage categorie={categorie}/>
       </div>
-      <div className="w-full max-w-7xl border">
-        OTHER
-      </div>
     </section>
+    <Footer categorie={categorie}/>
+    </>
   );
 }

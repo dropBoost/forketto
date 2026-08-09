@@ -2,8 +2,6 @@ import Link from "next/link"
 
 export default function CategorieHomepage ({categorie}) {
 
-  console.log(categorie)
-
   return (
 
   <div className="flex flex-row items-center justify-center w-full bg-primary min-h-120">
