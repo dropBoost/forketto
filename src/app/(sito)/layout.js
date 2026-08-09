@@ -1,10 +1,4 @@
-import Footer from "@/components/sito/theme/footer";
-import Header from "@/components/sito/theme/header";
 
-export const metadata = {
-  title: "Sito",
-  description: "Scopri Forketto.",
-};
 
 export default function LayoutSito({ children }) {
   return (

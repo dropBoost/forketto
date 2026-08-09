@@ -58,93 +58,96 @@ const components = [
 
 export default function Header() {
   return (
-    <header className="w-full bg-primary">
-      <div className="flex h-16 w-full items-center justify-between gap-2 px-4">
-        <div className="flex h-full w-50 items-center justify-start">
-          <Image
-            src="/assets/img/logo_forketto.png"
-            width={200}
-            height={100}
-            alt="Forketto logo"
-            className="h-auto w-40 dark:invert"
-            priority
-          />
-        </div>
+    <header className="flex flex-col items-center justify-center w-full ">
+      {/* <div className="py-2">TOP BAR</div> */}
+      <div className="flex flex-col items-center justify-center w-full bg-primary">
+        <div className="flex h-16 w-full items-center justify-between gap-2 px-4 max-w-7xl">
+          <Link href={`/`} className="flex h-full w-50 items-center justify-start">
+            <Image
+              src="/assets/img/logo_forketto.png"
+              width={200}
+              height={100}
+              alt="Forketto logo"
+              className="h-auto w-40 dark:invert"
+              priority
+            />
+          </Link>
 
-        <div className="flex h-full flex-1 items-center justify-center">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink href="/horeca" target="_blank" className={`px-3 py-1 text-background hover:text-foreground`} >
-                  FOOD
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              {/* <NavigationMenuItem className="hidden md:flex">
-                <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
-                  Components
-                </NavigationMenuTrigger>
+          <div className="flex h-full flex-1 items-center justify-center">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/horeca" target="_blank" className={`px-3 py-1 text-background hover:text-foreground`} >
+                    FOOD
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                {/* <NavigationMenuItem className="hidden md:flex">
+                  <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
+                    Components
+                  </NavigationMenuTrigger>
 
-                <NavigationMenuContent className="bg-neutral-900 text-neutral-100">
-                  <ul className="grid w-100 gap-2 p-2 md:w-125 md:grid-cols-2 lg:w-150">
-                    {components.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem> */}
+                  <NavigationMenuContent className="bg-neutral-900 text-neutral-100">
+                    <ul className="grid w-100 gap-2 p-2 md:w-125 md:grid-cols-2 lg:w-150">
+                      {components.map((component) => (
+                        <ListItem
+                          key={component.title}
+                          title={component.title}
+                          href={component.href}
+                        >
+                          {component.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem> */}
 
-              {/* <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
-                  With Icon
-                </NavigationMenuTrigger>
+                {/* <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100 data-[state=open]:bg-white/10 data-[state=open]:text-neutral-100">
+                    With Icon
+                  </NavigationMenuTrigger>
 
-                <NavigationMenuContent className="bg-neutral-900 text-neutral-100">
-                  <ul className="grid w-50 gap-1 p-2">
-                    <li className="flex flex-col gap-1">
-                      <IconMenuItem
-                        href="#"
-                        icon={<CircleAlertIcon className="size-4" />}
-                      >
-                        Backlog
-                      </IconMenuItem>
+                  <NavigationMenuContent className="bg-neutral-900 text-neutral-100">
+                    <ul className="grid w-50 gap-1 p-2">
+                      <li className="flex flex-col gap-1">
+                        <IconMenuItem
+                          href="#"
+                          icon={<CircleAlertIcon className="size-4" />}
+                        >
+                          Backlog
+                        </IconMenuItem>
 
-                      <IconMenuItem
-                        href="#"
-                        icon={<CircleDashedIcon className="size-4" />}
-                      >
-                        To Do
-                      </IconMenuItem>
+                        <IconMenuItem
+                          href="#"
+                          icon={<CircleDashedIcon className="size-4" />}
+                        >
+                          To Do
+                        </IconMenuItem>
 
-                      <IconMenuItem
-                        href="#"
-                        icon={<CircleCheckIcon className="size-4" />}
-                      >
-                        Done
-                      </IconMenuItem>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem> */}
+                        <IconMenuItem
+                          href="#"
+                          icon={<CircleCheckIcon className="size-4" />}
+                        >
+                          Done
+                        </IconMenuItem>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem> */}
 
-              {/* <NavigationMenuItem>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()} bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100`}
-                  render={<Link href="/docs">Docs</Link>}
-                />
-              </NavigationMenuItem> */}
+                {/* <NavigationMenuItem>
+                  <NavigationMenuLink
+                    className={`${navigationMenuTriggerStyle()} bg-transparent text-neutral-100 hover:bg-white/10 hover:text-neutral-100`}
+                    render={<Link href="/docs">Docs</Link>}
+                  />
+                </NavigationMenuItem> */}
 
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
-        <div className="flex h-full w-50 items-center justify-end text-neutral-100">
-          social
+          <div className="flex h-full w-50 items-center justify-end text-neutral-100">
+            social
+          </div>
         </div>
       </div>
     </header>
