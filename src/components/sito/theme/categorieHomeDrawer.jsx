@@ -5,42 +5,11 @@ import { toast } from "sonner"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
-
-const deliveryTimes = [
-  {
-    value: "asap",
-    id: "delivery-asap",
-    label: "Standard delivery",
-    description: "25–35 min · Driver assigned now",
-    badge: "Fastest",
-  },
-  {
-    value: "5-00",
-    id: "delivery-5-00",
-    label: "5:00 PM – 5:15 PM",
-    description: "Prep starts at 4:45 PM",
-  },
-  {
-    value: "5-30",
-    id: "delivery-5-30",
-    label: "5:30 PM – 5:45 PM",
-    description: "Good if you're heading home",
-  },
-  {
-    value: "6-00",
-    id: "delivery-6-00",
-    label: "6:00 PM – 6:15 PM",
-    description: "Most popular · High demand",
-  },
-  {
-    value: "6-30",
-    id: "delivery-6-30",
-    label: "6:30 PM – 6:45 PM",
-    description: "Last slot before kitchen closes",
-  },
-]
+import { Separator } from "@/components/ui/separator"
 
 export default function CategorieHomeDrawer({categorie, supercategorie}) {
 
@@ -63,22 +32,24 @@ export default function CategorieHomeDrawer({categorie, supercategorie}) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen} showSwipeHandle={isMobile} direction="right">
-      <DrawerTrigger className="inline-flex items-center justify-center rounded-md px-4 py-2"> {supercategorie.alias} </DrawerTrigger>
+      <DrawerTrigger className="flex flex-col gap-5 items-center justify-center rounded-4xl p-5! border border-white/30 h-fit aspect-square hover:bg-white/30 transition-all">
+        <Image src="/assets/img/placeholder.png" width={150} height={150} alt={`Forketto ${supercategorie.alias}`} className="rounded-full aspect-square object-cover object-center w-[70%]"/>
+        <h3 className="uppercase text-neutral-50 font-bold border border-white/30 px-5 py-2 rounded-2xl">{supercategorie.alias}</h3> 
+      </DrawerTrigger>
       <DrawerContent className="w-[90vw] sm:max-w-6xl!">
-        <DrawerHeader>
-          <DrawerTitle>{supercategorie.alias}</DrawerTitle>
+        <DrawerHeader className={`bg-primary rounded-tl-xl`}>
+          <DrawerTitle className={`text-4xl font-bold text-secondary`}>{supercategorie.alias}</DrawerTitle>
           {/* <DrawerDescription>
             We&apos;ll prepare your order as soon as possible.
           </DrawerDescription> */}
         </DrawerHeader>
-        <div className="flex-1 scroll-fade overflow-y-auto p-4">
+        <div className="flex flex-1 flex-col gap-2 p-4 overflow-y-auto scroll-m-4">
           {categorie?.map((categoria) => (
-            <Button
-              key={categoria.id}
-              variant="outline"
-            >
+            <div key={categoria.id} className="flex flex-row gap-1">
+            <Link href={`/categoria/${categoria.id}`} className={`items-center justify-start bg-secondary text-neutral-700 text-2xl hover:text-primary px-3 py-2 transition-all`}>
               {categoria.alias}
-            </Button>
+            </Link>
+            </div>
           ))}
         </div>
         <DrawerFooter>

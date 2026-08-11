@@ -4,6 +4,7 @@ import HeaderHome from "@/components/sito/theme/headerHome";
 import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
 import { getMenuSupercategorie } from "@/lib/menu/getMenuSupercategorie";
 import HeroBanner from "@/components/sito/theme/heroBanner";
+import BannerPromo from "@/components/sito/theme/bannerPromo";
 
 export const metadata = {
   title: "Forketto",
@@ -42,6 +43,12 @@ export default async function Home() {
       </div>
       <div className="w-full">
         <CategorieHomepage categorie={categorie} supercategorie={supercategorie}/>
+      </div>
+      <div className="flex items-center justify-center w-full p-10">
+        <BannerPromo bgImg="/assets/img/banner_forketto_home.png" bgColor="#ffcc05" titolo="Ciao" height={500}/>
+      </div>
+      <div className="flex items-center justify-center w-full p-10">
+        FAQ
       </div>
     </section>
     <Footer categorie={categorie}/>
