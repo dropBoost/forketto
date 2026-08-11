@@ -2,6 +2,7 @@ import CategorieHomepage from "@/components/sito/theme/categorieHome";
 import Footer from "@/components/sito/theme/footer";
 import HeaderHome from "@/components/sito/theme/headerHome";
 import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
+import { getMenuSupercategorie } from "@/lib/menu/getMenuSupercategorie";
 import HeroBanner from "@/components/sito/theme/heroBanner";
 
 export const metadata = {
@@ -30,6 +31,7 @@ export const metadata = {
 export default async function Home() {
 
   const categorie = await getMenuCategorie()
+  const supercategorie = await getMenuSupercategorie()
 
   return (
     <>
@@ -39,7 +41,7 @@ export default async function Home() {
         <HeroBanner bgImg="/assets/img/banner_forketto_home.png" bgColor="#ffcc05" titolo="Ciao" height={500}/>
       </div>
       <div className="w-full">
-        <CategorieHomepage categorie={categorie}/>
+        <CategorieHomepage categorie={categorie} supercategorie={supercategorie}/>
       </div>
     </section>
     <Footer categorie={categorie}/>

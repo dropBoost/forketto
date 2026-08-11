@@ -7,7 +7,7 @@ export async function getMenuHorecaByID(id) {
   const { data, error } = await db
     .from("menu")
     .select(`*,
-      categoria:menu_categoria(id_supercategoria,alias,
+      categoria:menu_categoria(id_supercategoria,alias,order,
         supercategoria:menu_supercategoria(alias)
       )
     `)

@@ -6,7 +6,7 @@ import CategorieFooter from "./categorieFooter";
 export default function Footer ({categorie}) {
   return (
 
-  <footer className="flex flex-col justify-end items-center w-full min-h-70 bg-secondary">
+  <footer className="flex flex-col justify-end items-center w-full min-h-70 bg-secondary xl:px-0 px-4">
     <div className="flex flex-col w-full py-5 bg-neutral-50 rounded-b-3xl max-w-7xl">
       <CategorieFooter categorie={categorie}/>
     </div>

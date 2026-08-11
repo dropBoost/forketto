@@ -1,14 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 
-export async function getMenuCategorie() {
+export async function getMenuSupercategorie() {
 
   const db = await createClient();
 
   const { data, error } = await db
-    .from("menu_categoria")
-    .select(`*,
-      supercategoria:menu_supercategoria(alias)
-      `)
+    .from("menu_supercategoria")
+    .select(`*`)
     .order("order", { ascending: true });
 
   if (error) {
