@@ -17,7 +17,7 @@ export default async function HorecaPAGE({ params }) {
       <div className="flex-1 w-full">
         <PageHorecaUI horeca={horeca} theme={theme} menu={menu}/>
       </div>
-      <div className="flex flex-row items-center justify-between bg-neutral-800 w-full p-5 px-7 max-w-7xl">
+      <div className="flex flex-row items-center justify-between bg-neutral-500 w-full p-5 px-7 max-w-7xl">
         <Image src="/assets/img/logo_forketto.png" width={80} height={30}/>
         <Link href={`https://www.dropboost.it`} target="_blank" className="text-[0.6rem] text-secondary">powered by dropboost.it</Link>
       </div>
