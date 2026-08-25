@@ -5,6 +5,8 @@ import { getMenuCategorie } from "@/lib/menu/getMenuCategorie";
 import { getMenuSupercategorie } from "@/lib/menu/getMenuSupercategorie";
 import HeroBanner from "@/components/sito/theme/heroBanner";
 import BannerPromo from "@/components/sito/theme/bannerPromo";
+import FAQhome from "@/components/sito/theme/faqHome";
+import FAQhomeData from "@/lib/data/faqHomeData";
 
 export const metadata = {
   title: "Forketto",
@@ -33,6 +35,7 @@ export default async function Home() {
 
   const categorie = await getMenuCategorie()
   const supercategorie = await getMenuSupercategorie()
+  const faqData = FAQhomeData()
 
   return (
     <>
@@ -47,8 +50,8 @@ export default async function Home() {
       <div className="flex items-center justify-center w-full p-10">
         <BannerPromo bgImg="/assets/img/banner_forketto_home.png" bgColor="#ffcc05" titolo="Ciao" height={500}/>
       </div>
-      <div className="flex items-center justify-center w-full p-10">
-        FAQ
+      <div className="flex items-center justify-center w-full pt-5 pb-10 px-10 bg-primary">
+        <FAQhome data={faqData}/>
       </div>
     </section>
     <Footer categorie={categorie}/>

@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import MenuCard from "./CardMenu";
+import FormCategoria from "./FormCategoria";
 
-export default function ListaMenu({ categorie = [], horeca }) {
+export default function ListaMenu({ categorie = [], supercategorie = [], horeca }) {
 
   const [soloAttivi, setSoloAttivi] = useState(false);
   const [soloVetrina, setSoloVetrina] = useState(false);
@@ -167,40 +168,18 @@ export default function ListaMenu({ categorie = [], horeca }) {
     );
   }
 
-  if (!elementiMenu.length) {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="">
-          <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} setUpdate={setUpdate} padding={`p-4`} description={`Aggiungi elementi al tuo menu`}/>
-        </div>
-        {horeca.length <= 0 ?
-        <div className="flex flex-1 flex-row gap-2 items-center xl:justify-start justify-center w-full">
-          <Store size={18} strokeWidth={2} className="text-red-700"/>
-          <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
-        </div> : null}
-        <div className="rounded-lg border border-dashed p-10 text-center">
-          <p className="font-medium">
-            Nessun elemento presente nel menu
-          </p>
-
-          <p className="mt-1 text-sm text-muted-foreground">
-            Inserisci il primo piatto per iniziare.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex xl:flex-row flex-col w-full max-w-full xl:justify-end justify-center xl:items-center items-start gap-3 p-3 bg-muted/50 rounded-lg overflow-hidden">
-        {horeca.length <= 0 ?
-        <div className="flex flex-1 flex-row gap-2 items-center xl:justify-start justify-center w-full">
-          <Store size={18} strokeWidth={2} className="text-red-700"/>
-          <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
-        </div> : null}
+        {horeca.length > 0 ?
+          <div className="flex flex-1 flex-row gap-2 items-center xl:justify-start justify-center w-full">
+            <Store size={18} strokeWidth={2} className="text-red-700"/>
+            <SelectCustom select={selectHoreca} setSelect={setSelectHoreca} item={horeca}/>
+          </div> 
+        : null}
         <div className="flex flex-row items-center gap-2">
           <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
+          <FormCategoria id_horeca={selectHoreca} titleButton="categoria" supercategorie={supercategorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
           {/* FILTRI */}
           <Dialog>
             <DialogTrigger asChild>

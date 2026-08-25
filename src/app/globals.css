@@ -117,6 +117,33 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Scrollbar per Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--muted);
+}
+
+/* Scrollbar per Chrome, Edge e Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border: 2px solid var(--muted);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  filter: brightness(0.9);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

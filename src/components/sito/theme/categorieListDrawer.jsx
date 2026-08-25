@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { Separator } from "@/components/ui/separator"
 
-export default function CategorieHomeDrawer({categorie, supercategorie}) {
+export default function CategorieListDrawer({categorie, supercategorie, titleTrigger}) {
 
   const [open, setOpen] = React.useState(false)
   const [deliveryTime, setDeliveryTime] = React.useState("asap")
@@ -32,9 +32,8 @@ export default function CategorieHomeDrawer({categorie, supercategorie}) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen} showSwipeHandle={isMobile} direction="right">
-      <DrawerTrigger className="flex flex-col gap-5 items-center justify-center rounded-4xl p-5! border border-white/30 h-fit aspect-square hover:bg-white/30 transition-all">
-        <Image src="/assets/img/placeholder.png" width={150} height={150} alt={`Forketto ${supercategorie.alias}`} className="rounded-full aspect-square object-cover object-center w-[70%]"/>
-        <h3 className="uppercase text-neutral-50 font-bold border border-white/30 px-5 py-2 rounded-2xl">{supercategorie.alias}</h3> 
+      <DrawerTrigger className="bg-secondary px-2 py-1 text-sm hover:bg-neutral-300">
+        <h3 className="">{titleTrigger}</h3> 
       </DrawerTrigger>
       <DrawerContent className="w-[90vw] sm:max-w-6xl!">
         <DrawerHeader className={`bg-primary rounded-tl-xl`}>
@@ -52,8 +51,8 @@ export default function CategorieHomeDrawer({categorie, supercategorie}) {
             </div>
           ))}
         </div>
-        <DrawerFooter>
-          <DrawerClose>Chiudi</DrawerClose>
+        <DrawerFooter className={`bg-neutral-200`}>
+          <DrawerClose className="">Chiudi</DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
