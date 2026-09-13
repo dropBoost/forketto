@@ -117,6 +117,26 @@ export async function syncStripeSubscription(
       new Date().toISOString(),
   };
 
+  const { data: esistente, error: letturaError } = await supabaseAdmin
+    .from("abbonamento")
+    .select("origine")
+    .eq("utente", utente)
+    .maybeSingle();
+
+  if (letturaError) {
+    throw new Error(letturaError.message);
+  }
+
+  if (esistente?.origine === "manuale") {
+    throw new Error(
+      "Sincronizzazione Stripe bloccata: abbonamento manuale esistente"
+    );
+  }
+
+  dati.origine = "stripe";
+  dati.data_scadenza_manuale = null;
+  dati.last_manual_operation_id = null;
+
   const { error } = await supabaseAdmin
     .from("abbonamento")
     .upsert(dati, {

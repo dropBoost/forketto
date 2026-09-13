@@ -23,6 +23,9 @@ export async function getRegistroAbbonamenti() {
       data_pagamento,
       durata,
       costo,
+      origine,
+      status,
+      metodo_pagamento,
       stripe_customer_id,
       stripe_subscription_id,
       stripe_invoice_id,
@@ -35,6 +38,7 @@ export async function getRegistroAbbonamenti() {
       )
     `)
     .eq("utente", user.id)
+    .or("origine.eq.stripe,status.eq.paid")
     .order("data_pagamento", {
       ascending: false,
     });

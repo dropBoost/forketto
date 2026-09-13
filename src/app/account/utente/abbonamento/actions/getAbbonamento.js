@@ -20,6 +20,8 @@ export async function getAbbonamento() {
       id,
       utente,
       id_piano_abbonamento,
+      origine,
+      data_scadenza_manuale,
       stripe_customer_id,
       stripe_subscription_id,
       stripe_price_id,

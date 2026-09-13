@@ -28,11 +28,16 @@ function formatCurrency(value) {
 function formatDate(value) {
   if (!value) return "—";
 
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "—";
+
   return new Intl.DateTimeFormat("it-IT", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  }).format(new Date(value));
+    timeZone: "Europe/Rome",
+  }).format(date);
 }
 
 export function PaymentsTable({ pagamenti }) {
@@ -74,78 +79,96 @@ export function PaymentsTable({ pagamenti }) {
               </TableHeader>
 
               <TableBody>
-                {pagamenti.map((pagamento) => (
-                  <TableRow key={pagamento.id}>
-                    <TableCell className="font-medium">
-                      {formatDate(pagamento.data_pagamento)}
-                    </TableCell>
+                {pagamenti.map((pagamento) => {
+                  const manuale =
+                    pagamento.origine === "manuale";
 
-                    <TableCell>
-                      {pagamento.piano_abbonamento?.nome ??
-                        "Piano Forketto"}
-                    </TableCell>
-
-                    <TableCell>
-                      {formatCurrency(pagamento.costo)}
-                    </TableCell>
-
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className="border-emerald-200 bg-emerald-50 text-emerald-700"
-                      >
-                        Pagata
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex justify-end gap-2">
-                        {pagamento.stripe_invoice_pdf && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                          >
-                            <a
-                              href={pagamento.stripe_invoice_pdf}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <FileDown />
-                              PDF
-                            </a>
-                          </Button>
+                  return (
+                    <TableRow key={pagamento.id}>
+                      <TableCell className="font-medium">
+                        {formatDate(
+                          pagamento.data_pagamento
                         )}
+                      </TableCell>
 
-                        {pagamento.stripe_invoice_hosted_url && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            asChild
-                          >
-                            <a
-                              href={
-                                pagamento.stripe_invoice_hosted_url
-                              }
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <ExternalLink />
-                              Visualizza
-                            </a>
-                          </Button>
-                        )}
+                      <TableCell>
+                        {pagamento.piano_abbonamento
+                          ?.nome ?? "Piano Forketto"}
+                      </TableCell>
 
-                        {!pagamento.stripe_invoice_pdf &&
-                          !pagamento.stripe_invoice_hosted_url && (
+                      <TableCell>
+                        {formatCurrency(pagamento.costo)}
+                      </TableCell>
+
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className="border-emerald-200 bg-emerald-50 text-emerald-700"
+                        >
+                          {manuale
+                            ? `Pagato manualmente${
+                                pagamento.metodo_pagamento
+                                  ? ` · ${pagamento.metodo_pagamento}`
+                                  : ""
+                              }`
+                            : "Pagata"}
+                        </Badge>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex justify-end gap-2">
+                          {!manuale &&
+                            pagamento.stripe_invoice_pdf && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                asChild
+                              >
+                                <a
+                                  href={
+                                    pagamento.stripe_invoice_pdf
+                                  }
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  <FileDown />
+                                  PDF
+                                </a>
+                              </Button>
+                            )}
+
+                          {!manuale &&
+                            pagamento.stripe_invoice_hosted_url && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                asChild
+                              >
+                                <a
+                                  href={
+                                    pagamento.stripe_invoice_hosted_url
+                                  }
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  <ExternalLink />
+                                  Visualizza
+                                </a>
+                              </Button>
+                            )}
+
+                          {(manuale ||
+                            (!pagamento.stripe_invoice_pdf &&
+                              !pagamento.stripe_invoice_hosted_url)) && (
                             <span className="text-sm text-muted-foreground">
                               Non disponibile
                             </span>
                           )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

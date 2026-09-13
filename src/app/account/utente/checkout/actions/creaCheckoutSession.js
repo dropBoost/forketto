@@ -24,6 +24,22 @@ export async function creaCheckoutSession(formData) {
     redirect("/account/utente/accesso");
   }
 
+  const { data: abbonamentoEsistente, error: abbonamentoError } = await supabase
+    .from("abbonamento")
+    .select("origine")
+    .eq("utente", user.id)
+    .maybeSingle();
+
+  if (abbonamentoError) {
+    throw new Error(abbonamentoError.message);
+  }
+
+  if (abbonamentoEsistente?.origine === "manuale") {
+    redirect(
+      "/account/utente/abbonamento?error=gestione-manuale"
+    );
+  }
+
   const { data: piano, error: pianoError } =
     await supabase
       .from("piano_abbonamento")

@@ -48,6 +48,13 @@ const statusConfig = {
     className:
       "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-900 dark:bg-purple-950 dark:text-purple-300",
   },
+
+  pending_manual_payment: {
+    label: "In attesa di pagamento",
+    className:
+      "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300",
+  },
+
 };
 
 export function StatusBadge({ status }) {

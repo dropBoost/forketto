@@ -29,6 +29,22 @@ export async function creaPortalSession() {
     );
   }
 
+  const { data: abbonamento, error: abbonamentoError } = await supabase
+    .from("abbonamento")
+    .select("origine")
+    .eq("utente", user.id)
+    .maybeSingle();
+
+  if (abbonamentoError) {
+    throw new Error(abbonamentoError.message);
+  }
+
+  if (abbonamento?.origine === "manuale") {
+    redirect(
+      "/account/utente/abbonamento?error=gestione-manuale"
+    );
+  }
+
   if (!utente.stripe_customer_id) {
     redirect("/account/utente/checkout");
   }
