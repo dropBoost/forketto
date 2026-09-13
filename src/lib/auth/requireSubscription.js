@@ -1,43 +1,52 @@
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server"
+import { syncStripeSubscription } from "@/lib/stripe/subscription"
 
-const STATI_ABILITATI = ["active", "trialing"];
+const STATI_ABILITATI = ["active", "trialing"]
 
 export async function requireSubscription() {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   const {
     data: { user },
     error: userError,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
   if (userError || !user) {
     redirect(
       "/account/utente/accesso?redirectTo=%2Fmanager"
-    );
+    )
   }
 
-  const { data: utente, error: utenteError } = await supabase
-    .from("utente")
-    .select(`
-      *
-    `)
-    .eq("id", user.id)
-    .maybeSingle();
+  // Recupero utente
+  const { data: utente, error: utenteError } =
+    await supabase
+      .from("utente")
+      .select(`
+        id,
+        nome,
+        cognome,
+        email,
+        attivo,
+        ruolo
+      `)
+      .eq("id", user.id)
+      .maybeSingle()
 
   if (utenteError) {
     throw new Error(
       `Errore durante il recupero dell'utente: ${utenteError.message}`
-    );
+    )
   }
 
   if (!utente || utente.attivo !== true) {
     redirect(
       "/account/utente/accesso?error=utente-non-attivo"
-    );
+    )
   }
 
+  // Recupero abbonamento dal database
   const { data: abbonamento, error: abbonamentoError } =
     await supabase
       .from("abbonamento")
@@ -63,53 +72,127 @@ export async function requireSubscription() {
         )
       `)
       .eq("utente", user.id)
-      .maybeSingle();
+      .maybeSingle()
 
   if (abbonamentoError) {
     throw new Error(
       `Errore durante il controllo dell'abbonamento: ${abbonamentoError.message}`
-    );
+    )
   }
 
+  // Nessun abbonamento
   if (!abbonamento) {
     redirect(
       "/account/utente/checkout?error=abbonamento-mancante"
-    );
+    )
   }
 
-  if (!STATI_ABILITATI.includes(abbonamento.status)) {
-    redirect(
-      `/account/utente/abbonamento?error=${encodeURIComponent(
-        abbonamento.status || "abbonamento-non-attivo"
-      )}`
-    );
-  }
+  /*
+   * Partiamo dai dati presenti su Supabase.
+   * Se scopriamo che il periodo è scaduto,
+   * proviamo a risincronizzare con Stripe.
+   */
+  let abbonamentoVerificato = abbonamento
 
   if (abbonamento.current_period_end) {
     const scadenza = new Date(
       abbonamento.current_period_end
-    );
+    )
 
-    if (
-      Number.isNaN(scadenza.getTime()) ||
+    const periodoScaduto =
+      !Number.isNaN(scadenza.getTime()) &&
       scadenza.getTime() <= Date.now()
-    ) {
-      redirect(
-        "/account/utente/abbonamento?error=abbonamento-scaduto"
-      );
+
+    if (periodoScaduto) {
+      try {
+        const { dati } =
+          await syncStripeSubscription(
+            abbonamento.stripe_subscription_id
+          )
+
+        /*
+         * dati contiene lo stato aggiornato
+         * recuperato direttamente da Stripe.
+         */
+        abbonamentoVerificato = {
+          ...abbonamento,
+          ...dati,
+
+          // Manteniamo la relazione del piano
+          // recuperata dalla query Supabase.
+          piano_abbonamento:
+            abbonamento.piano_abbonamento,
+        }
+      } catch (error) {
+        console.error(
+          "Errore sincronizzazione Stripe:",
+          error
+        )
+
+        redirect(
+          "/account/utente/abbonamento?error=verifica-abbonamento"
+        )
+      }
     }
   }
 
-  if (abbonamento.piano_abbonamento?.attivo === false) {
+  /*
+   * IMPORTANTE:
+   * da questo momento NON utilizziamo più
+   * "abbonamento", ma "abbonamentoVerificato".
+   *
+   * Se Stripe ha rinnovato l'abbonamento,
+   * qui avremo già i nuovi dati.
+   */
+
+  // Controllo stato Stripe
+  if (
+    !STATI_ABILITATI.includes(
+      abbonamentoVerificato.status
+    )
+  ) {
+    redirect(
+      `/account/utente/abbonamento?error=${encodeURIComponent(
+        abbonamentoVerificato.status ||
+          "abbonamento-non-attivo"
+      )}`
+    )
+  }
+
+  // Controllo nuova scadenza
+  if (
+    abbonamentoVerificato.current_period_end
+  ) {
+    const nuovaScadenza = new Date(
+      abbonamentoVerificato.current_period_end
+    )
+
+    if (
+      !Number.isNaN(nuovaScadenza.getTime()) &&
+      nuovaScadenza.getTime() <= Date.now()
+    ) {
+      redirect(
+        "/account/utente/abbonamento?error=abbonamento-scaduto"
+      )
+    }
+  }
+
+  // Controllo che il piano esista ancora
+  if (
+    abbonamentoVerificato
+      .piano_abbonamento?.attivo === false
+  ) {
     redirect(
       "/account/utente/abbonamento?error=piano-non-disponibile"
-    );
+    )
   }
 
   return {
     authUser: user,
     utente,
-    abbonamento,
-    piano: abbonamento.piano_abbonamento,
-  };
+    abbonamento: abbonamentoVerificato,
+    piano:
+      abbonamentoVerificato
+        .piano_abbonamento,
+  }
 }
