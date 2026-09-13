@@ -28,7 +28,7 @@ export function FormAccessoUtente({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto text-sm underline-offset-2 hover:underline">
+                  <a href="/account/utente/recupera-password" className="ml-auto text-sm underline-offset-2 hover:underline">
                     Hai dimenticato la password?
                   </a>
                 </div>

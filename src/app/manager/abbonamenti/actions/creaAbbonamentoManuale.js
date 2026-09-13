@@ -133,10 +133,27 @@ export async function creaAbbonamentoManuale(
         );
       }
 
+
+      const appUrl =
+        process.env.NEXT_PUBLIC_APP_URL ||
+        process.env.NEXT_PUBLIC_SITE_URL;
+
+      if (!appUrl) {
+        throw new Error(
+          "Configura NEXT_PUBLIC_APP_URL o NEXT_PUBLIC_SITE_URL."
+        );
+      }
+
+      const confirmUrl = new URL(
+        "/account/utente/auth/confirm",
+        appUrl
+      ).toString();
+
       const { data: invito, error: invitoError } =
         await supabaseAdmin.auth.admin.inviteUserByEmail(
           email,
           {
+            redirectTo: confirmUrl,
             data: {
               nome,
               cognome,
@@ -144,6 +161,7 @@ export async function creaAbbonamentoManuale(
             },
           }
         );
+
 
       if (invitoError || !invito?.user?.id) {
         throw new Error(
