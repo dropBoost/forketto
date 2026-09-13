@@ -15,10 +15,7 @@ function periodoValido(fine) {
 export async function requireSubscription() {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
   if (userError || !user) {
     redirect("/account/utente/accesso?redirectTo=%2Fmanager");
@@ -38,6 +35,19 @@ export async function requireSubscription() {
 
   if (!utente || utente.attivo !== true) {
     redirect("/account/utente/accesso?error=utente-non-attivo");
+  }
+
+  if (!["HRC", "SAM", "ADM"].includes(utente.ruolo)) {
+    redirect("/");
+  }
+
+  if (["SAM", "ADM"].includes(utente.ruolo)) {
+    return {
+      authUser: user,
+      utente,
+      abbonamento: null,
+      piano: null,
+    };
   }
 
   const { data: abbonamento, error: abbonamentoError } = await supabase

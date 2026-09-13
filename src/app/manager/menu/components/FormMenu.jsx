@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { createClient } from "@/utils/supabase/client";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -79,17 +80,15 @@ const allergeniDisponibili = [
   },
 ];
 
-export default function FormMenu({ id_horeca, categorie = [], titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16, setUpdate }) {
+export default function FormMenu({ id_horeca, titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16, setUpdate }) {
 
   const formRef = useRef(null)
   const fileInputRef = useRef(null)
   const [previewImmagine, setPreviewImmagine] = useState(null)
   const [nomeImmagine, setNomeImmagine] = useState("")
-
-  const [state, formAction, pending] = useActionState(
-    createMenuAction,
-    initialState
-  );
+  const [categorieMenu, setCategorieMenu] = useState([])
+  const [state, formAction, pending] = useActionState( createMenuAction, initialState );
+  const supabase = createClient();
 
   useEffect(() => {
     return () => {
@@ -118,6 +117,39 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
     }
   }, [state.success]);
 
+  useEffect(() => {
+
+    let annullato = false;
+
+    if (!id_horeca) {
+      setCategorieMenu([]);
+      return;
+    }
+
+    async function caricaCategorie() {
+      const { data, error } = await supabase
+        .from("menu_categoria_horeca")
+        .select("*")
+        .eq("id_horeca", id_horeca);
+
+      if (annullato) return;
+
+      if (error) {
+        console.error("Errore caricamento categorie:", error);
+        setCategorieMenu([]);
+        return;
+      }
+
+      setCategorieMenu(data ?? []);
+    }
+
+    caricaCategorie();
+
+    return () => {
+      annullato = true;
+    };
+
+  }, [id_horeca]);
 
   function handleImageChange(event) {
     const file = event.target.files?.[0];
@@ -176,6 +208,8 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
     }
   }
 
+  console.log(categorieMenu)
+
   return (
   <Dialog className={`max-h-screen`}>
     <DialogTrigger className={`flex flex-col gap-2 items-center justify-center ${padding} dark:bg-primary/20 bg-secondary-foreground/5 rounded-2xl`}>
@@ -230,7 +264,7 @@ export default function FormMenu({ id_horeca, categorie = [], titleButton = "Agg
                 </SelectTrigger>
 
                 <SelectContent>
-                  {categorie.map((categoria) => (
+                  {categorieMenu.map((categoria) => (
                     <SelectItem
                       key={categoria.id}
                       value={String(categoria.id)}

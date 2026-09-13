@@ -27,7 +27,7 @@ export default async function PageAbbonamenti() {
     operatoreError ||
     !operatore ||
     !operatore.attivo ||
-    operatore.ruolo !== "HRC"
+    operatore.ruolo == "HRC" 
   ) {
     throw new Error("Accesso non consentito.");
   }

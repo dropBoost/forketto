@@ -27,7 +27,7 @@ async function verificaOperatore() {
     profiloError ||
     !profilo ||
     !profilo.attivo ||
-    profilo.ruolo !== "HRC"
+    profilo.ruolo !== "SAM"
   ) {
     throw new Error("Non puoi creare abbonamenti.");
   }

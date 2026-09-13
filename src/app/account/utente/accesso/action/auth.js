@@ -25,7 +25,7 @@ export async function loginUtenteAction(formData) {
     .from("utente")
     .select("id, ruolo")
     .eq("id", data.user.id)
-    .eq("ruolo", "HRC")
+    .in("ruolo", ["HRC", "SAM", "ADM"])
     .single();
 
   if (utenteError || !utente) {

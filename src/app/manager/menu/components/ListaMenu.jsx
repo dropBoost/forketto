@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from "@/components/ui/switch";
 import MenuCard from "./CardMenu";
 import FormCategoria from "./FormCategoria";
+import { createClient } from "@/utils/supabase/client";
 
-export default function ListaMenu({ categorie = [], supercategorie = [], horeca }) {
+export default function ListaMenu({ supercategorie = [], horeca }) {
 
   const [soloAttivi, setSoloAttivi] = useState(false);
   const [soloVetrina, setSoloVetrina] = useState(false);
@@ -21,7 +22,9 @@ export default function ListaMenu({ categorie = [], supercategorie = [], horeca 
   const [loading, setLoading] = useState(true);
   const [errore, setErrore] = useState(null);
   const [update, setUpdate] = useState(0)
-
+  const supabase = createClient();
+  const [categorieHoreca, setCategorieHoreca] = useState([]);
+  
   useEffect(() => {
     if (horeca.length > 0 && !selectHoreca) {
       setSelectHoreca(horeca[0].id);
@@ -74,6 +77,40 @@ export default function ListaMenu({ categorie = [], supercategorie = [], horeca 
       setLoading(false);
     }
   }
+
+
+
+  useEffect(() => {
+    let annullato = false;
+
+    if (!selectHoreca) {
+      setCategorieHoreca([]);
+      return;
+    }
+
+    async function caricaCategorie() {
+      const { data, error } = await supabase
+        .from("menu_categoria_horeca")
+        .select("id, alias, id_horeca")
+        .eq("id_horeca", selectHoreca);
+
+      if (annullato) return;
+
+      if (error) {
+        console.error("Errore caricamento categorie:", error);
+        setCategorieHoreca([]);
+        return;
+      }
+
+      setCategorieHoreca(data ?? []);
+    }
+
+    caricaCategorie();
+
+    return () => {
+      annullato = true;
+    };
+  }, [selectHoreca, update]);
 
   useEffect(() => {
     recuperaMenu();
@@ -178,7 +215,7 @@ export default function ListaMenu({ categorie = [], supercategorie = [], horeca 
           </div> 
         : null}
         <div className="flex flex-row items-center gap-2">
-          <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
+          <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorieHoreca} padding={`p-0`} description={``} setUpdate={setUpdate}/>
           <FormCategoria id_horeca={selectHoreca} titleButton="categoria" supercategorie={supercategorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
           {/* FILTRI */}
           <Dialog>
@@ -349,7 +386,7 @@ export default function ListaMenu({ categorie = [], supercategorie = [], horeca 
             <MenuCard
               key={elemento.id}
               elemento={elemento}
-              categorie={categorie}
+              categorie={categorieHoreca}
               onUpdated={recuperaMenu}
               setUpdate={setUpdate}
             />

@@ -30,7 +30,8 @@ async function verificaOperatore() {
     profiloError ||
     !profilo ||
     !profilo.attivo ||
-    profilo.ruolo !== "HRC"
+    profilo.ruolo == "HRC" ||
+    profilo.ruolo == "CLT"
   ) {
     throw new Error("Non puoi registrare pagamenti.");
   }

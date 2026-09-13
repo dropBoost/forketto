@@ -1,4 +1,4 @@
-import { Settings2Icon, CircleHelpIcon, Store, Soup, ChartSpline, Calculator, HandPlatter } from "lucide-react"
+import { Settings2Icon, CircleHelpIcon, Store, Soup, ChartSpline, Calculator, HandPlatter, Apple } from "lucide-react"
 import FormMenuSelectHoreca from "@/app/manager/menu/components/FormMenuSelectHoreca"
 import ElencoNotifiche from "../notifiche/elencoNotifiche";
 import { getUtente } from "@/lib/auth/getUtente"
@@ -20,7 +20,6 @@ export default async function navData () {
       monogram: `${avatar}`,
       logo: `${utente?.img}`
     },
-
     quickMenu: [
       {
         title: "",
@@ -81,6 +80,15 @@ export default async function navData () {
         url: "#",
         icon: (
           <CircleHelpIcon />
+        ),
+      },
+    ],
+    navSuperadmin: [
+      {
+        title: "Abbonamenti",
+        url: "/manager/abbonamenti",
+        icon: (
+          <Apple />
         ),
       },
     ],

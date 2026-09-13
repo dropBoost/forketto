@@ -25,7 +25,7 @@ export async function POST(request) {
       .from("menu")
       .select(`
         *,
-        categoria:menu_categoria(
+        categoria:menu_categoria_horeca(
           id_supercategoria,
           alias,
           supercategoria:menu_supercategoria(alias)
