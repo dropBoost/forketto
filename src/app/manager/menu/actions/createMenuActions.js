@@ -56,6 +56,9 @@ export async function createMenuAction(
 
   const immagine = formData.get("immagine");
   const allergeni = getAllergeniFromFormData(formData);
+  const ingredienti = JSON.parse(
+    formData.get("ingredienti")?.toString() || "[]"
+  )
 
   const values = {
     id_horeca:
@@ -65,8 +68,7 @@ export async function createMenuAction(
     nome: formData.get("nome")?.toString() || "",
     descrizione:
       formData.get("descrizione")?.toString() || "",
-    ingredienti:
-      formData.get("ingredienti")?.toString() || "",
+    ingredienti,
     prezzo_listino:
       formData.get("prezzo_listino")?.toString() || "",
     prezzo_promo:
@@ -216,7 +218,7 @@ export async function createMenuAction(
       descrizione:
         values.descrizione.trim() || null,
       ingredienti:
-        values.ingredienti.trim() || null,
+        values.ingredienti || null,
       allergeni: values.allergeni,
       prezzo_listino: prezzoListino,
       prezzo_promo: prezzoPromo,

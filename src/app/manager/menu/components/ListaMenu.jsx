@@ -12,7 +12,7 @@ import MenuCard from "./CardMenu";
 import FormCategoria from "./FormCategoria";
 import { createClient } from "@/utils/supabase/client";
 
-export default function ListaMenu({ supercategorie = [], horeca }) {
+export default function ListaMenu({ categorie = [], supercategorie = [], horeca }) {
 
   const [soloAttivi, setSoloAttivi] = useState(false);
   const [soloVetrina, setSoloVetrina] = useState(false);
@@ -77,7 +77,6 @@ export default function ListaMenu({ supercategorie = [], horeca }) {
       setLoading(false);
     }
   }
-
 
 
   useEffect(() => {
@@ -216,7 +215,7 @@ export default function ListaMenu({ supercategorie = [], horeca }) {
         : null}
         <div className="flex flex-row items-center gap-2">
           <FormMenu id_horeca={selectHoreca} titleButton="menu" categorie={categorieHoreca} padding={`p-0`} description={``} setUpdate={setUpdate}/>
-          <FormCategoria id_horeca={selectHoreca} titleButton="categoria" supercategorie={supercategorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
+          <FormCategoria id_horeca={selectHoreca} titleButton="categoria" categorie={categorie} supercategorie={supercategorie} padding={`p-0`} description={``} setUpdate={setUpdate}/>
           {/* FILTRI */}
           <Dialog>
             <DialogTrigger asChild>

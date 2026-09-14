@@ -84,9 +84,13 @@ export default function FormMenu({ id_horeca, titleButton = "Aggiungi", descript
 
   const formRef = useRef(null)
   const fileInputRef = useRef(null)
+  const prossimoIngredienteId = useRef(1)
   const [previewImmagine, setPreviewImmagine] = useState(null)
   const [nomeImmagine, setNomeImmagine] = useState("")
   const [categorieMenu, setCategorieMenu] = useState([])
+  const [ingredienti, setIngredienti] = useState([
+    { id: 0, nome: "", status: true },
+  ])
   const [state, formAction, pending] = useActionState( createMenuAction, initialState );
   const supabase = createClient();
 
@@ -108,6 +112,13 @@ export default function FormMenu({ id_horeca, titleButton = "Aggiungi", descript
 
       setPreviewImmagine(null);
       setNomeImmagine("");
+      setIngredienti([
+        {
+          id: prossimoIngredienteId.current++,
+          nome: "",
+          status: true,
+        },
+      ]);
       setUpdate(prev => prev+1)
 
       if (fileInputRef.current) {
@@ -208,7 +219,56 @@ export default function FormMenu({ id_horeca, titleButton = "Aggiungi", descript
     }
   }
 
-  console.log(categorieMenu)
+  function modificaIngrediente(id, nome) {
+    setIngredienti((ingredientiCorrenti) => {
+      const ingredientiAggiornati = ingredientiCorrenti.map((ingrediente) =>
+        ingrediente.id === id
+          ? { ...ingrediente, nome }
+          : ingrediente
+      );
+
+      const ultimoIngrediente =
+        ingredientiAggiornati[ingredientiAggiornati.length - 1];
+
+      if (ultimoIngrediente?.nome.trim()) {
+        ingredientiAggiornati.push({
+          id: prossimoIngredienteId.current++,
+          nome: "",
+          status: true,
+        });
+      }
+
+      return ingredientiAggiornati;
+    });
+  }
+
+  function rimuoviIngrediente(id) {
+    setIngredienti((ingredientiCorrenti) => {
+      const ingredientiAggiornati = ingredientiCorrenti.filter(
+        (ingrediente) => ingrediente.id !== id
+      );
+
+      if (
+        ingredientiAggiornati.length === 0 ||
+        ingredientiAggiornati.at(-1)?.nome.trim()
+      ) {
+        ingredientiAggiornati.push({
+          id: prossimoIngredienteId.current++,
+          nome: "",
+          status: true,
+        });
+      }
+
+      return ingredientiAggiornati;
+    });
+  }
+
+  const ingredientiDaSalvare = ingredienti
+    .filter((ingrediente) => ingrediente.nome.trim())
+    .map((ingrediente) => ({
+      nome: ingrediente.nome.trim(),
+      status: ingrediente.status,
+    }));
 
   return (
   <Dialog className={`max-h-screen`}>
@@ -299,19 +359,70 @@ export default function FormMenu({ id_horeca, titleButton = "Aggiungi", descript
             </div>
 
             <div className="space-y-2 col-span-2">
-              <Label htmlFor="ingredienti">
+              <Label>
                 Ingredienti
               </Label>
 
-              <Textarea
-                id="ingredienti"
+              <input
+                type="hidden"
                 name="ingredienti"
-                placeholder="Pomodoro, mozzarella, basilico..."
-                defaultValue={
-                  state.values?.ingredienti || ""
-                }
-                rows={4}
+                value={JSON.stringify(ingredientiDaSalvare)}
+                readOnly
               />
+
+              <div className="space-y-3 rounded-lg border p-4">
+                {ingredienti.map((ingrediente, index) => {
+                  const compilato = ingrediente.nome.trim() !== "";
+
+                  return (
+                    <div
+                      key={ingrediente.id}
+                      className="flex items-center gap-2"
+                    >
+                      <Input
+                        id={`ingrediente-${ingrediente.id}`}
+                        value={ingrediente.nome}
+                        onChange={(event) =>
+                          modificaIngrediente(
+                            ingrediente.id,
+                            event.target.value
+                          )
+                        }
+                        placeholder={
+                          index === 0
+                            ? "Pomodoro"
+                            : "Aggiungi un altro ingrediente"
+                        }
+                        autoComplete="off"
+                      />
+
+                      {compilato && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() =>
+                            rimuoviIngrediente(ingrediente.id)
+                          }
+                          aria-label={`Rimuovi ${ingrediente.nome}`}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                Inserisci un ingrediente per far comparire automaticamente il campo successivo.
+              </p>
+
+              {state.errors?.ingredienti && (
+                <p className="text-sm text-destructive">
+                  {state.errors.ingredienti}
+                </p>
+              )}
             </div>
 
             <div className="space-y-3 col-span-2">

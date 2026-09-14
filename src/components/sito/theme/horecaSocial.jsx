@@ -9,7 +9,7 @@ export default function HorecaSocialLink ({instagram, facebook, tiktok}) {
   return (
     <div id="social_link" className="flex flex-row">
       {facebook && 
-      <Link href={facebook} target="_blank">
+      <Link href={facebook} target="_blank" >
         <FontAwesomeIcon icon={faFacebookSquare} className="text-primary lg:text-xl text-lg"/>
       </Link>
       }

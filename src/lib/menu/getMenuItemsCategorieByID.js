@@ -7,10 +7,11 @@ export async function getMenuItemsCategorieByID(id) {
   const { data, error } = await db
     .from("menu")
     .select(`*,
-      horeca:horeca(*)
+      horeca:horeca(*),
+      categoria:menu_categoria_horeca(*)
       `)
     .eq("attivo", true)
-    .eq("id_categoria", id)
+    .eq("categoria.id_categoria", id)
     .order("vetrina", { ascending: true })
 
   if (error) {

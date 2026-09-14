@@ -21,13 +21,15 @@ const initialState = {
   values: {},
 };
 
-export default function FormCategoria({ id_horeca, supercategorie = [], titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16, setUpdate }) {
+export default function FormCategoria({ id_horeca, supercategorie = [], categorie = [], titleButton = "Aggiungi", description, padding = "p-8", iconSize = 16, setUpdate }) {
 
   const formRef = useRef(null)
   const fileInputRef = useRef(null)
   const [previewImmagine, setPreviewImmagine] = useState(null)
   const [nomeImmagine, setNomeImmagine] = useState("")
   const [selectSupercategoria, setSelectSupercategoria] = useState("")
+  const [categoriaForkettoFilter, setCategoriaForkettoFilter] = useState([])
+  const [selectCategoriaForketto, setSelectCategoriaForketto] = useState("")
   const [loading, setLoading] = useState(false)
   const [categorieEsistenti, setCategorieEsistenti] = useState([])
   const supabase = createClient()
@@ -267,6 +269,26 @@ export default function FormCategoria({ id_horeca, supercategorie = [], titleBut
     }
   }
 
+  useEffect(() => {
+
+    if (!selectSupercategoria) return
+
+    let active = true
+
+    async function filterCategorie() {
+      
+      const catFilter = categorie.filter(c => c.id_supercategoria == selectSupercategoria)
+      setCategoriaForkettoFilter(catFilter)
+    return () => {
+      active = false
+    }
+
+    }
+
+    filterCategorie()
+
+  }, [selectSupercategoria])
+
   return (
   <Dialog className={`max-h-screen`}>
     <DialogTrigger className={`flex flex-col gap-2 items-center justify-center ${padding} dark:bg-primary/20 bg-secondary-foreground/5 rounded-2xl`}>
@@ -300,7 +322,7 @@ export default function FormCategoria({ id_horeca, supercategorie = [], titleBut
         <DialogClose asChild ><Button type="button" variant="secondary">Chiudi</Button></DialogClose>
       </DialogFooter>
     </DialogContent> :
-    <DialogContent showCloseButton={false} onPointerDownOutside={() => setSelectSupercategoria("")}>
+    <DialogContent showCloseButton={false} onPointerDownOutside={(event) => {event.preventDefault() }}>
       <DialogHeader className={`flex flex-row`}>
           <div className="flex flex-1 items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -358,6 +380,35 @@ export default function FormCategoria({ id_horeca, supercategorie = [], titleBut
               )}
             </div>
             <div className={` grid-cols-1 gap-6 ${selectSupercategoria ? "grid" : "hidden"}`}>
+              {/* CATEGORIA FORKETTO*/}
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="id_categorie_forketto">
+                  Categorie Forketto
+                </Label>
+
+                <Select name="id_categorie_forketto" defaultValue={state.values?.id_categorie_forketto || undefined} onValueChange={setSelectCategoriaForketto}>
+                  <SelectTrigger id="id_categorie_forketto" className={`w-full`}>
+                    <SelectValue placeholder="Seleziona una categoria" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {categoriaForkettoFilter.map((c) => (
+                      <SelectItem
+                        key={c.id}
+                        value={String(c.id)}
+                      >
+                        {c.alias}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {state.errors?.id_categorie_forketto && (
+                  <p className="text-sm text-destructive">
+                    {state.errors.id_categorie_forketto}
+                  </p>
+                )}
+              </div>
               {/* TOP 10 CATEGORIE */}
               <div className="space-y-2 col-span-2">
                 <Label>Top 10 categorie</Label>

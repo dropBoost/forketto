@@ -37,5 +37,18 @@ export async function getHorecaThemeByID(id) {
       backgroundColor: settings.colore || "#ffcc05",
       color: settings.coloreTestoHeader || "#000000",
     },
+    alias: {
+      color: "#ffffff",
+    },
+    socialIcon: {
+      color: "#ffffff",
+    },
+
+    title: {
+      color: settings.colore || "#ffcc05",
+    },
+    price: {
+      color: "#333333",
+    }
   };
 }

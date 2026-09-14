@@ -33,6 +33,7 @@ export async function createCategoriaAction(
   const values = {
     id_horeca: formData.get("id_horeca")?.toString() || "",
     id_supercategoria: formData.get("id_supercategoria")?.toString() || "",
+    id_categorie_forketto: formData.get("id_categorie_forketto")?.toString() || "",
     alias: formData.get("alias")?.toString() || "",
     descrizione: formData.get("descrizione")?.toString() || "",
     attivo: formData.get("attivo") === "true",
@@ -47,6 +48,11 @@ export async function createCategoriaAction(
   if (!values.id_supercategoria) {
     errors.id_supercategoria =
       "Seleziona una supercategoria";
+  }
+
+  if (!values.id_categorie_forketto) {
+    errors.id_supercategoria =
+      "Seleziona una categoria di sistema";
   }
 
   if (!values.alias.trim()) {
@@ -92,10 +98,7 @@ export async function createCategoriaAction(
     .trim()
     .toLocaleLowerCase("it-IT");
 
-  const {
-    data: categoriaEsistente,
-    error: checkCategoriaError,
-  } = await db
+  const { data: categoriaEsistente, error: checkCategoriaError } = await db
     .from("menu_categoria_horeca")
     .select("id")
     .eq("id_horeca", values.id_horeca)
@@ -181,6 +184,7 @@ export async function createCategoriaAction(
     .insert({
       id_horeca: values.id_horeca,
       id_supercategoria: values.id_supercategoria,
+      id_categoria: values.id_categorie_forketto,
       alias: aliasNormalizzato,
       descrizione: values.descrizione.trim() || null,
       cover: imageUrl,

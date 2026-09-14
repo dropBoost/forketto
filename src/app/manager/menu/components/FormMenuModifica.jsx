@@ -1,21 +1,32 @@
-"use client";
+"use client"
 
-import { useActionState, useEffect, useRef, useState } from "react";
-import { ImagePlus, Trash2 } from "lucide-react";
-import { updateMenuAction } from "../actions/updateMenuAction";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+import { ImagePlus, Trash2 } from "lucide-react"
+import { updateMenuAction } from "../actions/updateMenuAction"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
 
 const initialState = {
   success: false,
   message: "",
   errors: {},
-};
+}
 
 const allergeniDisponibili = [
   {
@@ -74,34 +85,95 @@ const allergeniDisponibili = [
     key: "molluschi",
     label: "Molluschi",
   },
-];
+]
+
+function creaIngredientiIniziali(ingredientiSalvati) {
+  let ingredienti = ingredientiSalvati
+
+  /*
+   * Compatibilità con eventuali vecchi valori
+   * salvati come stringa.
+   */
+  if (typeof ingredientiSalvati === "string") {
+    try {
+      ingredienti = JSON.parse(ingredientiSalvati)
+    } catch {
+      ingredienti = ingredientiSalvati
+        .split(",")
+        .map((nome) => ({
+          nome: nome.trim(),
+          status: true,
+        }))
+        .filter((ingrediente) => ingrediente.nome)
+    }
+  }
+
+  const ingredientiValidi = Array.isArray(ingredienti)
+    ? ingredienti
+        .filter(
+          (ingrediente) =>
+            ingrediente &&
+            typeof ingrediente.nome === "string" &&
+            ingrediente.nome.trim()
+        )
+        .map((ingrediente, index) => ({
+          id: index,
+          nome: ingrediente.nome,
+          status:
+            typeof ingrediente.status === "boolean"
+              ? ingrediente.status
+              : true,
+        }))
+    : []
+
+  /*
+   * Aggiunge sempre un campo vuoto finale,
+   * pronto per un nuovo ingrediente.
+   */
+  return [
+    ...ingredientiValidi,
+    {
+      id: ingredientiValidi.length,
+      nome: "",
+      status: true,
+    },
+  ]
+}
 
 export default function FormModificaMenu({
   elemento,
   categorie = [],
   onSuccess,
 }) {
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null)
 
   const [state, formAction, pending] = useActionState(
     updateMenuAction,
     initialState
-  );
+  )
+
+  const [ingredienti, setIngredienti] = useState(() =>
+    creaIngredientiIniziali(elemento.ingredienti)
+  )
+
+  const prossimoIngredienteId = useRef(
+    ingredienti.length
+  )
 
   const [previewImmagine, setPreviewImmagine] =
-    useState(elemento.immagine || null);
+    useState(elemento.immagine || null)
 
   const [nuovaImmagine, setNuovaImmagine] =
-    useState(false);
+    useState(false)
 
   const [rimuoviImmagine, setRimuoviImmagine] =
-    useState(false);
+    useState(false)
 
   useEffect(() => {
     if (state.success) {
-      onSuccess?.();
+      onSuccess?.()
     }
-  }, [state.success, onSuccess]);
+  }, [state.success, onSuccess])
 
   useEffect(() => {
     return () => {
@@ -109,47 +181,44 @@ export default function FormModificaMenu({
         nuovaImmagine &&
         previewImmagine?.startsWith("blob:")
       ) {
-        URL.revokeObjectURL(previewImmagine);
+        URL.revokeObjectURL(previewImmagine)
       }
-    };
-  }, [previewImmagine, nuovaImmagine]);
+    }
+  }, [previewImmagine, nuovaImmagine])
 
   function handleImageChange(event) {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
 
-    if (!file) return;
+    if (!file) return
 
     const allowedTypes = [
       "image/jpeg",
       "image/png",
       "image/webp",
-    ];
+    ]
 
     if (!allowedTypes.includes(file.type)) {
-      event.target.value = "";
-      return;
+      event.target.value = ""
+      return
     }
 
-    const maxSize = 5 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024
 
     if (file.size > maxSize) {
-      event.target.value = "";
-      return;
+      event.target.value = ""
+      return
     }
 
     if (
       nuovaImmagine &&
       previewImmagine?.startsWith("blob:")
     ) {
-      URL.revokeObjectURL(previewImmagine);
+      URL.revokeObjectURL(previewImmagine)
     }
 
-    setPreviewImmagine(
-      URL.createObjectURL(file)
-    );
-
-    setNuovaImmagine(true);
-    setRimuoviImmagine(false);
+    setPreviewImmagine(URL.createObjectURL(file))
+    setNuovaImmagine(true)
+    setRimuoviImmagine(false)
   }
 
   function removeImage() {
@@ -157,20 +226,93 @@ export default function FormModificaMenu({
       nuovaImmagine &&
       previewImmagine?.startsWith("blob:")
     ) {
-      URL.revokeObjectURL(previewImmagine);
+      URL.revokeObjectURL(previewImmagine)
     }
 
-    setPreviewImmagine(null);
-    setNuovaImmagine(false);
-    setRimuoviImmagine(true);
+    setPreviewImmagine(null)
+    setNuovaImmagine(false)
+    setRimuoviImmagine(true)
 
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = ""
     }
   }
 
+  function modificaIngrediente(id, nome) {
+    setIngredienti((ingredientiCorrenti) => {
+      const ingredientiAggiornati =
+        ingredientiCorrenti.map((ingrediente) =>
+          ingrediente.id === id
+            ? {
+                ...ingrediente,
+                nome,
+              }
+            : ingrediente
+        )
+
+      const ultimoIngrediente =
+        ingredientiAggiornati[
+          ingredientiAggiornati.length - 1
+        ]
+
+      /*
+       * Quando viene compilato l’ultimo campo,
+       * ne aggiunge automaticamente uno nuovo.
+       */
+      if (ultimoIngrediente?.nome.trim()) {
+        ingredientiAggiornati.push({
+          id: prossimoIngredienteId.current++,
+          nome: "",
+          status: true,
+        })
+      }
+
+      return ingredientiAggiornati
+    })
+  }
+
+  function rimuoviIngrediente(id) {
+    setIngredienti((ingredientiCorrenti) => {
+      const ingredientiAggiornati =
+        ingredientiCorrenti.filter(
+          (ingrediente) => ingrediente.id !== id
+        )
+
+      /*
+       * Mantiene sempre almeno un campo vuoto
+       * alla fine della lista.
+       */
+      if (
+        ingredientiAggiornati.length === 0 ||
+        ingredientiAggiornati.at(-1)?.nome.trim()
+      ) {
+        ingredientiAggiornati.push({
+          id: prossimoIngredienteId.current++,
+          nome: "",
+          status: true,
+        })
+      }
+
+      return ingredientiAggiornati
+    })
+  }
+
+  /*
+   * Rimuove i campi vuoti e la proprietà id,
+   * che serve solamente al rendering React.
+   */
+  const ingredientiDaSalvare = ingredienti
+    .filter((ingrediente) => ingrediente.nome.trim())
+    .map((ingrediente) => ({
+      nome: ingrediente.nome.trim(),
+      status: true,
+    }))
+
   return (
-    <form action={formAction} className="space-y-6" >
+    <form
+      action={formAction}
+      className="space-y-6"
+    >
       <input
         type="hidden"
         name="id"
@@ -272,18 +414,72 @@ export default function FormModificaMenu({
       </div>
 
       <div className="space-y-2">
-        <Label
-          htmlFor={`ingredienti-${elemento.id}`}
-        >
-          Ingredienti
-        </Label>
+        <Label>Ingredienti</Label>
 
-        <Textarea
-          id={`ingredienti-${elemento.id}`}
+        <input
+          type="hidden"
           name="ingredienti"
-          defaultValue={elemento.ingredienti || ""}
-          rows={3}
+          value={JSON.stringify(
+            ingredientiDaSalvare
+          )}
+          readOnly
         />
+
+        <div className="space-y-3 rounded-lg border p-4">
+          {ingredienti.map((ingrediente, index) => {
+            const compilato =
+              ingrediente.nome.trim() !== ""
+
+            return (
+              <div
+                key={ingrediente.id}
+                className="flex items-center gap-3"
+              >
+                <Input
+                  id={`ingrediente-${elemento.id}-${ingrediente.id}`}
+                  value={ingrediente.nome}
+                  onChange={(event) =>
+                    modificaIngrediente(
+                      ingrediente.id,
+                      event.target.value
+                    )
+                  }
+                  placeholder={
+                    index === 0
+                      ? "Pomodoro"
+                      : "Aggiungi un altro ingrediente"
+                  }
+                  autoComplete="off"
+                />
+
+                {compilato && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      rimuoviIngrediente(ingrediente.id)
+                    }
+                    aria-label={`Rimuovi ${ingrediente.nome}`}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          Inserisci un ingrediente per far comparire
+          automaticamente il campo successivo.
+        </p>
+
+        {state.errors?.ingredienti && (
+          <p className="text-sm text-destructive">
+            {state.errors.ingredienti}
+          </p>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -296,30 +492,32 @@ export default function FormModificaMenu({
         </div>
 
         <div className="grid gap-3 rounded-lg border p-4 sm:grid-cols-2">
-          {allergeniDisponibili.map((allergene) => (
-            <div
-              key={allergene.key}
-              className="flex items-center gap-3"
-            >
-              <Checkbox
-                id={`${elemento.id}-${allergene.key}`}
-                name={`allergene_${allergene.key}`}
-                value="true"
-                defaultChecked={
-                  elemento.allergeni?.[
-                    allergene.key
-                  ] === true
-                }
-              />
-
-              <Label
-                htmlFor={`${elemento.id}-${allergene.key}`}
-                className="cursor-pointer font-normal"
+          {allergeniDisponibili.map(
+            (allergene) => (
+              <div
+                key={allergene.key}
+                className="flex items-center gap-3"
               >
-                {allergene.label}
-              </Label>
-            </div>
-          ))}
+                <Checkbox
+                  id={`${elemento.id}-${allergene.key}`}
+                  name={`allergene_${allergene.key}`}
+                  value="true"
+                  defaultChecked={
+                    elemento.allergeni?.[
+                      allergene.key
+                    ] === true
+                  }
+                />
+
+                <Label
+                  htmlFor={`${elemento.id}-${allergene.key}`}
+                  className="cursor-pointer font-normal"
+                >
+                  {allergene.label}
+                </Label>
+              </div>
+            )
+          )}
         </div>
       </div>
 
@@ -519,5 +717,5 @@ export default function FormModificaMenu({
         </Button>
       </div>
     </form>
-  );
+  )
 }

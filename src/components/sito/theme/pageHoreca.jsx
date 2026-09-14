@@ -7,6 +7,7 @@ import { Search, Frown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import HorecaSocialLink from "./horecaSocial";
+import { Separator } from "@/components/ui/separator";
 
 export default function PageHorecaUI({ horeca, theme, menu }) {
 
@@ -75,10 +76,10 @@ export default function PageHorecaUI({ horeca, theme, menu }) {
           <div className="flex flex-row items-center lg:h-30 h-20 lg:p-4 p-3 rounded-b-4xl" style={theme.header} >
             <Image className="w-fit rounded-full max-h-full" src={settings.logo} width={100} height={100} alt={`logo_${horeca.nome}`}/>
             <div className="flex flex-col flex-1 p-5 items-start justify-center ">
-              <h2 className="lg:text-3xl text-md font-extrabold text-ellipsis text-neutral-900">{horeca.nome}</h2>
-              <h3 className="text-xs text-neutral-500 italic">@{horeca.alias}</h3>
+              <h2 className="lg:text-3xl text-md font-extrabold text-ellipsis text-neutral-900" style={theme.header}>{horeca.nome}</h2>
+              <h3 className="text-xs text-neutral-500 italic" style={theme.alias}>@{horeca.alias}</h3>
             </div>
-            <div className="flex flex-row p-5 items-start justify-center ">
+            <div className="flex flex-row p-5 items-start justify-center" style={theme.socialIcon}>
               <HorecaSocialLink instagram={settings.instagram} facebook={settings.facebook} tiktok={settings.tiktok}/>
             </div>
           </div>
@@ -120,12 +121,8 @@ export default function PageHorecaUI({ horeca, theme, menu }) {
           </div>
 
         </div>
-
-
-
         {/* MENU */}
         <div className="flex flex-col gap-10">
-
           {Object.entries(menuPerCategoria).map(
             ([categoria, items]) =>  {
 
@@ -138,32 +135,43 @@ export default function PageHorecaUI({ horeca, theme, menu }) {
 
                   {items.map((m) => (
 
-                    <div key={m.id} className="flex flex-col gap-2 rounded-xl p-4 border">
-                      <div className="flex flex-col items-start justify-between gap-4">
-                      {m.immagine && <Image className="min-w-full aspect-square rounded-xl object-center object-cover" src={m.immagine} width={500} height={500} alt={`${m.nome} - ${horeca.nome}`}/>}
-                      <h3 className="font-bold text-lg"> {m.nome} </h3>
-                      {/* PREZZO */}
-                      <div className="flex items-center gap-2 shrink-0">
-                        {m.prezzo_promo ? (
-                          <>
-                            <span className="text-sm text-muted-foreground line-through">
+                    <div key={m.id} className="flex flex-col gap-2 rounded-xl p-4 border justify-between">
+                      <div className="flex flex-col items-start justify-start gap-2">
+                        {m.immagine && <Image className="min-w-full aspect-square rounded-xl object-center object-cover" src={m.immagine} width={500} height={500} alt={`${m.nome} - ${horeca.nome}`}/>}
+                        <h3 className="font-bold text-md" style={theme.title}> {m.nome} </h3>
+                        {m.descrizione || m.ingredienti ? 
+                        <div>
+                          {m.descrizione && ( <p> {m.descrizione} </p> )}
+                          {m.ingredienti && ( 
+                          <p className="text-sm text-muted-foreground">
+                              <span>
+                                {m.ingredienti.map((ingrediente) => ingrediente.nome).join(", ")}
+                              </span>
+                          </p> )}
+                        </div> : null }
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Separator/>
+                        {/* PREZZO */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          {m.prezzo_promo ? (
+                            <>
+                              <span className="text-sm text-muted-foreground line-through">
+                                € {Number(m.prezzo_listino).toFixed(2)}
+                              </span>
+
+                              <span className="font-bold text-sm">
+                                € {Number(m.prezzo_promo).toFixed(2)}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="font-bold text-sm" style={theme.price}>
                               € {Number(m.prezzo_listino).toFixed(2)}
                             </span>
+                          )}
 
-                            <span className="font-bold">
-                              € {Number(m.prezzo_promo).toFixed(2)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="font-bold">
-                            € {Number(m.prezzo_listino).toFixed(2)}
-                          </span>
-                        )}
-
+                        </div>
                       </div>
-                      </div>
-                      {m.descrizione && ( <p> {m.descrizione} </p> )}
-                      {m.ingredienti && ( <p className="text-sm text-muted-foreground"> {m.ingredienti} </p> )}
                     </div>
                   ))}
 

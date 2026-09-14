@@ -70,13 +70,11 @@ function getStoragePathFromPublicUrl(url) {
   );
 }
 
-export async function updateMenuAction(
-  prevState,
-  formData
-) {
-  const db = await createClient();
+export async function updateMenuAction( prevState, formData ) {
 
+  const db = await createClient();
   const file = formData.get("immagine");
+  const ingredienti = JSON.parse( formData.get("ingredienti")?.toString() || "[]" )
 
   const values = {
     id: formData.get("id")?.toString() || "",
@@ -87,8 +85,7 @@ export async function updateMenuAction(
     nome: formData.get("nome")?.toString() || "",
     descrizione:
       formData.get("descrizione")?.toString() || "",
-    ingredienti:
-      formData.get("ingredienti")?.toString() || "",
+    ingredienti,
     prezzo_listino:
       formData.get("prezzo_listino")?.toString() ||
       "",
@@ -253,10 +250,8 @@ export async function updateMenuAction(
     .update({
       id_categoria: values.id_categoria,
       nome: values.nome.trim(),
-      descrizione:
-        values.descrizione.trim() || null,
-      ingredienti:
-        values.ingredienti.trim() || null,
+      descrizione: values.descrizione.trim() || null,
+      ingredienti: values.ingredienti,
       allergeni,
       prezzo_listino: prezzoListino,
       prezzo_promo: prezzoPromo,

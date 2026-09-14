@@ -95,14 +95,16 @@ export default function MenuCard({ elemento, categorie, onUpdated, setUpdate }) 
           </p>
         )}
 
-        {elemento.ingredienti && (
+        {elemento.ingredienti.length >= 0 && (
           <div className="rounded-xl border px-2 py-3">
             <p className="text-xs font-medium">
               Ingredienti:
             </p>
 
             <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-              {elemento.ingredienti}
+              <span>
+                {elemento.ingredienti.map((ingrediente) => ingrediente.nome).join(", ")}
+              </span>
             </p>
           </div>
         )}
